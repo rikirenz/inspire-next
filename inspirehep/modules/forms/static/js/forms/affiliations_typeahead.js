@@ -79,7 +79,7 @@ define([
           callback(suggestions);
         }.bind(this));
       }.bind(this),
-      displayKey: 'metadata.ICN',
+      displayKey: data.metadata.ICN,
       templates: {
         empty: function(data) {
           return 'Cannot find this affiliation in our database.';
