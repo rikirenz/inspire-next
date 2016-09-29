@@ -36,9 +36,9 @@ from selenium.common.exceptions import WebDriverException
 def test_literature_create_article_journal_manually(selenium, login):
     """Submit the form for article creation from scratch"""
     selenium.get(os.environ['SERVER_NAME'] + '/submit/literature/create')
+    _hide_title_bar(selenium)
     selenium.find_element_by_id("skipImportData").click()
     WebDriverWait(selenium, 30).until(EC.text_to_be_present_in_element((By.ID, "form_container"),'Type of Document'))
-
     _links_population(selenium)
     _basic_info_population(selenium)
     _journal_population(selenium)
@@ -47,14 +47,14 @@ def test_literature_create_article_journal_manually(selenium, login):
     _comments_population(selenium)
     selenium.find_element_by_xpath("//div[@id='webdeposit_form_accordion']/div[4]/span/button").click()
     assert '' in ''
-
+    _show_title_bar(selenium)
 
 def test_literature_create_article_proceeding_manually(selenium, login):
     """Submit the form for article creation from scratch"""
     selenium.get(os.environ['SERVER_NAME'] + '/submit/literature/create')
+    _hide_title_bar(selenium)
     selenium.find_element_by_id("skipImportData").click()
     WebDriverWait(selenium, 30).until(EC.text_to_be_present_in_element((By.ID, "form_container"),'Type of Document'))
-
     _links_population(selenium)
     _basic_info_population(selenium)
     _conference_population(selenium)
@@ -63,15 +63,16 @@ def test_literature_create_article_proceeding_manually(selenium, login):
     _comments_population(selenium)
     selenium.find_element_by_xpath("//div[@id='webdeposit_form_accordion']/div[4]/span/button").click()
     assert '' in ''
+    _show_title_bar(selenium)
 
 
 def test_literature_create_thesis_manually(selenium, login):
     """Submit the form for thesis creation from scratch"""
     selenium.get(os.environ['SERVER_NAME'] + '/submit/literature/create')
+    _hide_title_bar(selenium)
     selenium.find_element_by_id("skipImportData").click()
     WebDriverWait(selenium, 30).until(EC.text_to_be_present_in_element((By.ID, "form_container"),'Type of Document'))
     Select(selenium.find_element_by_id('type_of_doc')).select_by_value('thesis')
-
     _thesis_population(selenium)
     _links_population(selenium)
     _basic_info_population(selenium)
@@ -79,7 +80,7 @@ def test_literature_create_thesis_manually(selenium, login):
     _comments_population(selenium)
     selenium.find_element_by_xpath("//div[@id='webdeposit_form_accordion']/div[4]/span/button").click()
     assert '' in ''
-
+    _show_title_bar(selenium)
 
 def _links_population(selenium):
     selenium.find_element_by_id("url").send_keys("http://www.pdf995.com/samples/pdf.pdf")
@@ -151,3 +152,13 @@ def _references_population(selenium):
 def _comments_population(selenium):
     selenium.find_element_by_xpath("//div[@id='webdeposit_form_accordion']/div[3]/div[9]/div").click()
     WebDriverWait(selenium, 10).until(EC.presence_of_element_located((By.ID, "extra_comments"))).send_keys("comments about the document")
+
+
+def _hide_title_bar(selenium):
+    selenium.execute_script('$("#collections-section").hide()')
+    selenium.execute_script('$("#topnav").hide()')
+
+
+def _show_title_bar(selenium):
+    selenium.execute_script('$("#collections-section").show()')
+    selenium.execute_script('$("#topnav").show()')
