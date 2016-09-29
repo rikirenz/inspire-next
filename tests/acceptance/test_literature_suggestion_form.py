@@ -23,65 +23,62 @@
 from __future__ import absolute_import, division, print_function
 
 import os
-from time import sleep
+
 
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import ElementNotVisibleException
 from selenium.common.exceptions import WebDriverException
 
 
-# def test_literature_create_article_journal_manually(selenium, login):
-#     """Submit the form for article creation from scratch"""
-#     selenium.get(os.environ['SERVER_NAME'] + '/submit/literature/create')
-#     selenium.find_element_by_id("skipImportData").click()
-#     _links_population(selenium)
-#     _basic_info_population(selenium)
-#     _journal_population(selenium)
-#     _conference_population(selenium)
-#     _references_population(selenium)
-#     _comments_population(selenium)
-#     selenium.find_element_by_xpath("//div[@id='webdeposit_form_accordion']/div[4]/span/button").click()
-#     assert '' in ''
-#
-#
-# def test_literature_create_article_proceeding_manually(selenium, login):
-#     """Submit the form for article creation from scratch"""
-#     selenium.get(os.environ['SERVER_NAME'] + '/submit/literature/create')
-#     selenium.find_element_by_id("skipImportData").click()
-#     selenium.find_element_by_link_text("Document Type").click()
-#     _links_population(selenium)
-#     _basic_info_population(selenium)
-#     _conference_population(selenium)
-#     _proceedings_population(selenium)
-#     _references_population(selenium)
-#     _comments_population(selenium)
-#     selenium.find_element_by_xpath("//div[@id='webdeposit_form_accordion']/div[4]/span/button").click()
-#     assert '' in ''
+def test_literature_create_article_journal_manually(selenium, login):
+    """Submit the form for article creation from scratch"""
+    selenium.get(os.environ['SERVER_NAME'] + '/submit/literature/create')
+    selenium.find_element_by_id("skipImportData").click()
+    WebDriverWait(selenium, 30).until(EC.text_to_be_present_in_element((By.ID, "form_container"),'Type of Document'))
+
+    _links_population(selenium)
+    _basic_info_population(selenium)
+    _journal_population(selenium)
+    _conference_population(selenium)
+    _references_population(selenium)
+    _comments_population(selenium)
+    selenium.find_element_by_xpath("//div[@id='webdeposit_form_accordion']/div[4]/span/button").click()
+    assert '' in ''
+
+
+def test_literature_create_article_proceeding_manually(selenium, login):
+    """Submit the form for article creation from scratch"""
+    selenium.get(os.environ['SERVER_NAME'] + '/submit/literature/create')
+    selenium.find_element_by_id("skipImportData").click()
+    WebDriverWait(selenium, 30).until(EC.text_to_be_present_in_element((By.ID, "form_container"),'Type of Document'))
+
+    _links_population(selenium)
+    _basic_info_population(selenium)
+    _conference_population(selenium)
+    _proceedings_population(selenium)
+    _references_population(selenium)
+    _comments_population(selenium)
+    selenium.find_element_by_xpath("//div[@id='webdeposit_form_accordion']/div[4]/span/button").click()
+    assert '' in ''
 
 
 def test_literature_create_thesis_manually(selenium, login):
     """Submit the form for thesis creation from scratch"""
     selenium.get(os.environ['SERVER_NAME'] + '/submit/literature/create')
     selenium.find_element_by_id("skipImportData").click()
-
-    WebDriverWait(selenium, 10).until(EC.presence_of_element_located((By.ID, "type_of_doc"))).click()
-    sleep(1)
-    Select(selenium.find_element_by_id("type_of_doc")).select_by_visible_text("Thesis")
-
-
-
+    WebDriverWait(selenium, 30).until(EC.text_to_be_present_in_element((By.ID, "form_container"),'Type of Document'))
+    Select(selenium.find_element_by_id('type_of_doc')).select_by_value('thesis')
 
     _thesis_population(selenium)
     _links_population(selenium)
     _basic_info_population(selenium)
     _references_population(selenium)
     _comments_population(selenium)
-
     selenium.find_element_by_xpath("//div[@id='webdeposit_form_accordion']/div[4]/span/button").click()
+    assert '' in ''
 
 
 def _links_population(selenium):
@@ -92,18 +89,14 @@ def _links_population(selenium):
 
 def _basic_info_population(selenium):
     selenium.find_element_by_id("title").send_keys("My Title For Test")
-
     Select(selenium.find_element_by_id("language")).select_by_value("rus")
     selenium.find_element_by_id("title_translation").send_keys("My Title was in Russian")
-
     selenium.find_element_by_xpath("(//button[@type='button'])[8]").click()
     selenium.find_element_by_css_selector("input[type=\"checkbox\"]").click()
     selenium.find_element_by_xpath("//input[@value='Computing']").click()
     selenium.find_element_by_xpath("(//button[@type='button'])[8]").click()
-
     selenium.find_element_by_id("authors-0-name").send_keys("Mister White")
     selenium.find_element_by_id("authors-0-affiliation").send_keys("Wisconsin U., Madison")
-
     selenium.find_element_by_link_text("Add another author").click()
     selenium.find_element_by_id("authors-1-name").send_keys("Mister Brown")
     selenium.find_element_by_id("authors-1-affiliation").send_keys("CERN")
@@ -115,7 +108,6 @@ def _basic_info_population(selenium):
 
     selenium.find_element_by_id("experiment").send_keys("This is a collaboration")
     selenium.find_element_by_id("abstract").send_keys("Lorem ipsum dolor sit amet, consetetur sadipscing elitr.")
-
     selenium.find_element_by_id("report_numbers-0-report_number").send_keys("100")
     selenium.find_element_by_link_text("Add another report number").click()
     selenium.find_element_by_id("report_numbers-1-report_number").send_keys("101")
