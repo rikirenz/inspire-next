@@ -28,7 +28,11 @@ from os import environ
 from time import sleep
 
 import pytest
+
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from invenio_db import db
 from invenio_search import current_search_client as es
@@ -60,8 +64,8 @@ def app(request):
         init_all_storage_paths()
         init_users_and_permissions()
 
-        migrate('./inspirehep/demosite/data/demo-records.xml.gz',
-                wait_for_results=True)
+        # migrate('./inspirehep/demosite/data/demo-records.xml.gz',
+        #         wait_for_results=True)
         es.indices.refresh('records-hep')
 
         yield app
@@ -85,5 +89,6 @@ def login(selenium):
 
     yield
 
+    WebDriverWait(selenium, 30).until(EC.text_to_be_present_in_element((By.ID, "topnav"), 'My account'))
     selenium.find_element_by_id('user-info').click()
     selenium.find_element_by_xpath("(//button[@type='button'])[2]").click()
