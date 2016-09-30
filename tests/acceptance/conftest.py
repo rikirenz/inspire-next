@@ -26,6 +26,7 @@ from __future__ import absolute_import, division, print_function
 
 from os import environ
 from time import sleep
+from random import randint
 
 import pytest
 
@@ -66,6 +67,8 @@ def app(request):
 
         migrate('./inspirehep/demosite/data/demo-records.xml.gz',
                  wait_for_results=True)
+        migrate('./inspirehep/demosite/data/demo-records.xml.gz',
+                 wait_for_results=True)
         es.indices.refresh('records-hep')
 
         yield app
@@ -90,5 +93,6 @@ def login(selenium):
     yield
 
     WebDriverWait(selenium, 30).until(EC.text_to_be_present_in_element((By.ID, "topnav"), 'My account'))
-    selenium.find_element_by_id('user-info').click()
+    selenium.execute_script('$("#toast-container").hide()')
+    selenium.find_element_by_id("user-info").click()
     selenium.find_element_by_xpath("(//button[@type='button'])[2]").click()

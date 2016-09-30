@@ -82,6 +82,7 @@ def test_literature_create_thesis_manually(selenium, login):
     assert '' in ''
     _show_title_bar(selenium)
 
+
 def _links_population(selenium):
     selenium.find_element_by_id("url").send_keys("http://www.pdf995.com/samples/pdf.pdf")
     selenium.find_element_by_id("additional_url").send_keys("http://www.pdf995.com/samples/pdf.pdf")
