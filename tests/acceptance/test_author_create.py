@@ -112,6 +112,20 @@ def test_ORCID_format(selenium, login):
     assert 'A valid ORCID iD consists of 16 digits separated by dashes.' not in selenium.page_source
 
 
+def test_institutions_years(selenium, login):
+    """Test format in Start Year and End Year for author institutions"""
+    selenium.get(os.environ['SERVER_NAME'] + '/submit/author/create')
+    _check_year_format('institution_history-0-start_year', 'state-institution_history-0-start_year', selenium)
+    _check_year_format('institution_history-0-end_year', 'state-institution_history-0-end_year', selenium)
+
+
+def test_experiments_years(selenium, login):
+    """Test format in Start Year and End Year for author experiments"""
+    selenium.get(os.environ['SERVER_NAME'] + '/submit/author/create')
+    _check_year_format('experiments-0-start_year', 'state-experiments-0-start_year', selenium)
+    _check_year_format('experiments-0-end_year', 'state-experiments-0-end_year', selenium)
+
+
 def test_author_creation(selenium, login):
     """Submit the form for author creation from scratch"""
     _insert_author(selenium)
@@ -232,3 +246,23 @@ def _insert_author(selenium):
     WebDriverWait(selenium, 10).until(EC.text_to_be_present_in_element((By.XPATH, '(//div[@class="alert alert-success alert-form-success"])'), 'Thank you for adding new profile information!'))
     assert 'Thank you for adding new profile information!' in selenium.page_source
     show_title_bar(selenium)
+
+
+def _check_year_format(input_id, error_message_id, selenium):
+    year_field = selenium.find_element_by_id(input_id)
+    try:
+        year_field.send_keys('wrongyear')
+        year_field.send_keys(Keys.TAB)
+        WebDriverWait(selenium, 10).until(EC.visibility_of_element_located((By.ID, error_message_id)))
+    except (ElementNotVisibleException, WebDriverException):
+        pass
+    assert 'is not a valid year' in selenium.page_source
+    year_field.clear()
+
+    try:
+        year_field.send_keys('2016')
+        year_field.send_keys(Keys.TAB)
+        WebDriverWait(selenium, 10).until(EC.visibility_of_element_located((By.ID, error_message_id)))
+    except (ElementNotVisibleException, WebDriverException):
+        pass
+    assert 'is not a valid year' not in selenium.page_source
