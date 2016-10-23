@@ -314,8 +314,8 @@ def newreview():
     objectid = request.values.get('objectid', 0, type=int)
     if not objectid:
         abort(400)
-    workflow_metadata.extra_data['is-update'] = True
     workflow_metadata = WorkflowUIRecord.get_record(objectid)['metadata']
+    workflow_metadata.extra_data['is-update'] = True
 
     # Converting json to populate form
     convert_for_form(workflow_metadata)
