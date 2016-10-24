@@ -27,6 +27,7 @@ from __future__ import absolute_import, division, print_function
 import os
 import logging
 from functools import wraps
+from pprint import pformat
 
 from flask import current_app, render_template
 from invenio_accounts.models import User
@@ -256,12 +257,18 @@ def send_robotupload(url=None,
             # Log what we are sending
             LOGGER.debug(
                 "Going to robotupload %s to %s:\n%s\n",
-                mode=mode,
-                url=url,
-                marcxml=marcxml,
+                mode,
+                url,
+                marcxml,
             )
 
         if not in_production_mode():
+            obj.log.debug(
+                "Going to robotupload %s to %s:\n%s\n",
+                mode,
+                url,
+                marcxml,
+            )
             return
 
         result = make_robotupload_marcxml(
@@ -310,6 +317,32 @@ def filter_keywords(obj, eng):
         keywords = filter(lambda x: x['accept'], keywords)
         obj.extra_data['keywords_prediction']['keywords'] = keywords
 
+        obj.log.debug('Filtered keywords: \n%s', pformat(keywords))
+
+    obj.log.debug('Got no prediction for keywords')
+
+
+def prepare_keywords(obj, eng):
+    """Prepares the keywords in the correct format to be sent"""
+    prediction = obj.extra_data.get('keywords_prediction', {})
+    if not prediction:
+        return
+
+    keywords = obj.data.get('keywords', [])
+    for keyword in prediction.get('keywords', []):
+        # TODO: differentiate between curated and gueesed keywords
+        keywords.append(
+            {
+                'classification_scheme': '',
+                'keyword': keyword['label'],
+                'source': 'curator' if keyword.get('curated') else 'magpie',
+            }
+        )
+
+    obj.data['keywords'] = keywords
+
+    obj.log.debug('Finally got keywords: \n%s', pformat(keywords))
+
 
 def user_pdf_get(obj, eng):
     """Upload user PDF file, if requested."""
@@ -321,3 +354,8 @@ def user_pdf_get(obj, eng):
         else:
             obj.data['fft'] = [fft]
         obj.log.info("PDF file added to FFT.")
+
+
+def remove_references(obj, eng):
+    obj.log.info(obj.data)
+    del obj.data['references']
