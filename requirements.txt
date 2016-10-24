@@ -25,7 +25,7 @@
 
 # FIXME temporary branch for testing
 -e git+https://github.com/inspirehep/invenio-query-parser.git@invenio3-inspire#egg=invenio-query-parser==0.6.0
--e git+https://github.com/david-caro/inspire-crawler.git@use_cascade_for_the_foreign_key#egg=inspire-crawler==0.2.2.dev20161004
+-e git+https://github.com/inspirehep/inspire-crawler.git@master#egg=inspire-crawler==0.2.2.dev20161004
 
 # INSPIRE forks of Invenio packages
 -e git+https://github.com/inspirehep/invenio-pidstore.git#egg=invenio_pidstore
