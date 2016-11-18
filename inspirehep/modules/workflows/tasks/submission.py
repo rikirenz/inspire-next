@@ -253,6 +253,7 @@ def send_robotupload(url=None,
         else:
             data = obj.data
         marc_json = marcxml_processor.do(data)
+        from celery.contrib import rdb; rdb.set_trace()
         marcxml = legacy_export_as_marc(marc_json)
 
         if current_app.debug:
@@ -306,8 +307,9 @@ def send_robotupload(url=None,
 
 def add_note_entry(obj, eng):
     """Add note entry to metadata on approval."""
-    def _has_note(reference_note, notes):
-        return any(reference_note == note for note in notes)
+    def _has_note(notes):
+        return any([{'value': '*Temporary entry*'} == note,
+                    {'value': '*Brief entry*'} == note] for note in notes)
 
     entry = {'value': '*Temporary entry*'} if obj.extra_data.get("core") \
         else {'value': '*Brief entry*'}
@@ -315,7 +317,7 @@ def add_note_entry(obj, eng):
             not isinstance(obj.data.get("public_notes"), list):
         obj.data['public_notes'] = [entry]
     else:
-        if not _has_note(entry, obj.data['public_notes']):
+        if not _has_note(obj.data['public_notes']):
             obj.data['public_notes'].append(entry)
 
 
