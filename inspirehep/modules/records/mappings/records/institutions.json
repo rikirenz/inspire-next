@@ -25,6 +25,12 @@
                     ],
                     "type": "string"
                 },
+                "legacy_ICN": {
+                    "copy_to": [
+                        "affautocomplete"
+                    ],
+                    "type": "string"
+                },
                 "_collections": {
                     "analyzer": "lowercase_analyzer",
                     "type": "string"
@@ -70,12 +76,6 @@
                     "type": "string"
                 },
                 "institution": {
-                    "copy_to": [
-                        "affautocomplete"
-                    ],
-                    "type": "string"
-                },
-                "name": {
                     "copy_to": [
                         "affautocomplete"
                     ],

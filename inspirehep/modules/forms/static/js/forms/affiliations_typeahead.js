@@ -57,9 +57,9 @@ define([
     this.$element = $element;
 
     var suggestionTemplate = Hogan.compile(
-      '<strong>{{ ICN }}</strong><br>' +
+      '<strong>{{ legacy_ICN }}</strong><br>' +
       '<small>' +
-      '{{#new_ICN}}{{#show_future_name}}Alternative name: {{new_ICN}}<br>{{/show_future_name}}{{/new_ICN}}' +
+      '{{#ICN}}{{#show_future_name}}Alternative name: {{ICN}}<br>{{/show_future_name}}{{/ICN}}' +
       '{{#department}}{{ department }}<br>{{/department}}' +
       '{{#institution}}{{ institution }}{{/institution}}' +
       '</small>'
@@ -80,14 +80,14 @@ define([
         }.bind(this));
       }.bind(this),
       displayKey: function(data) {
-        return data.metadata.ICN[0];
+        return data.metadata.legacy_ICN;
       },
       templates: {
         empty: function(data) {
           return 'Cannot find this affiliation in our database.';
         },
         suggestion: function(data) {
-          if (data.new_ICN != data.ICN) {
+          if (data.ICN != data.legacy_ICN) {
             data.show_future_name = true;
           }
           return suggestionTemplate.render.call(suggestionTemplate, data.metadata);
