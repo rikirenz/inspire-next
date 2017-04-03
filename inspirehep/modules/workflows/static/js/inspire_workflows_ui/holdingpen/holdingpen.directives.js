@@ -283,7 +283,7 @@
             if (!_subjectAlreadyPresent($scope.vm.new_subject_area)) {
               $scope.vm.record.metadata.inspire_categories.unshift({
                 'source': 'curator',
-                'term': $scope.vm.new_subject_area
+                'term': 'curator'
               });
               $scope.vm.new_subject_area = '';
               $scope.doUpdate();
