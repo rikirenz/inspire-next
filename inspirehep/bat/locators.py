@@ -57,9 +57,12 @@ class HoldingpenLiteratureListPageLocators(object):
 class HoldingpenLiteratureDetailPageLocators(object):
     PRINCIPAL_RECORD_PANEL = (By.XPATH, '(//div[@class="ng-scope"])[2]')
     SUBMISSION_PANEL = (By.XPATH, '//p[@class="text-center ng-scope"]')
-    FIRST_SUBJECT_AREAS = (By.XPATH, '(//div[@class="col-md-9 col-sm-9 col-xs-8 ng-binding"])[1]')
-    SECOND_SUBJECT_AREAS = (By.XPATH, '(//div[@class="col-md-9 col-sm-9 col-xs-8 ng-binding"])[2]')
+    FIRST_SUBJECT_AREAS_KEYWORD = (By.XPATH, '(//div[@class="col-md-9 col-sm-9 col-xs-8 ng-binding"])[1]')
+    FIRST_SUBJECT_AREAS_AUTHOR = (By.XPATH, '(//span[@class="scheme ng-binding ng-scope"])[1]')
+    SECOND_SUBJECT_AREAS_KEYWORD = (By.XPATH, '(//div[@class="col-md-9 col-sm-9 col-xs-8 ng-binding"])[2]')
     CONFIRMATION_MESSAGE = (By.XPATH, '//div[@class="alert ng-scope alert-accept"]')
+    ADD_KEYWORD_BUTTON = (By.XPATH, '(//button[@class="btn btn-info"])[1]')
+    ALL_ITEMS_SUBJECT_AREAS = (By.XPATH, '//div[@class="row subject-area ng-scope"]')
 
 
 # Author Classes
@@ -76,4 +79,6 @@ class HoldingpenAuthorDetailPageLocators(object):
 
 
 class GeneralLocators(object):
-    AUTOCOMPLETION_LIST = (By.CLASS_NAME, 'tt-suggestions')
+    AUTOCOMPLETION_LIST = (By.XPATH, '(//span[@class="tt-suggestions"]) | (//li[@class="ui-menu-item"])')
+
+

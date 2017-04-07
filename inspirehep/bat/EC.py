@@ -53,3 +53,19 @@ class TryClick(object):
             return False
 
         return element
+
+
+class CountItems(object):
+    """ An Expectation that counts the elements that the locator found."""
+    def __init__(self, locator, number_of_items):
+        self.locator = locator
+        self.number_of_items = number_of_items
+
+    def __call__(self, driver):
+        elements = driver.find_elements_by_xpath(self.locator[1])
+        if not elements or \
+                len(elements) == self.number_of_items:
+            return False
+
+        return elements
+

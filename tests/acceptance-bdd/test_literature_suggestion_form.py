@@ -31,6 +31,7 @@ from selenium.common.exceptions import (
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select, WebDriverWait
 
+from inspirehep.bat.EC import CountItems
 from inspirehep.bat.locators import CreateLiteraturePageLocators as CL
 from inspirehep.bat.locators import HoldingpenLiteratureListPageLocators as HL
 from inspirehep.bat.locators import HoldingpenLiteratureDetailPageLocators as HD
@@ -139,6 +140,11 @@ def test_verify_accepted_thesis():
     pass
 
 
+@scenario('literature_suggestion.feature', 'Add keyword to an article in the holdingpen')
+def test_add_keyword_in_the_record_detail():
+    pass
+
+
 # when statements for create literature page
 @when('I go to the literature suggestion page')
 def go_to_create_literature():
@@ -214,6 +220,20 @@ def click_abstract_link_button():
     Arsenic().get_element_with_locator(HL.SHOW_ABSTRACT_BUTTON).click()
 
 
+@when('I click on the Add keyword button')
+def click_add_keyword():
+    # count keywords elments
+    keywords_count = len(Arsenic().find_elements_by_xpath(HD.ALL_ITEMS_SUBJECT_AREAS[1]))
+    # wait for the entry
+    Arsenic().get_element_with_locator(HD.ADD_KEYWORD_BUTTON).click()
+    WebDriverWait(Arsenic(), 2).until(
+        CountItems(
+            HD.ALL_ITEMS_SUBJECT_AREAS,
+            keywords_count
+        )
+    )
+
+
 # then statements for create literature page
 @then(parsers.cfparse('I should see the {field} error message'))
 def is_there_a_message_error(field):
@@ -244,9 +264,21 @@ def is_the_record_detail_in_the_list_page(value_record_entry):
 def is_the_record_detail_in_the_detail_page(value_record_detail):
     record = Arsenic().get_element_with_locator(HD.PRINCIPAL_RECORD_PANEL).text
     record += Arsenic().get_element_with_locator(HD.SUBMISSION_PANEL).text
-    record += Arsenic().get_element_with_locator(HD.FIRST_SUBJECT_AREAS).text
+    record += Arsenic().get_element_with_locator(HD.FIRST_SUBJECT_AREAS_KEYWORD).text
 
     assert value_record_detail in record
+
+
+@then(parsers.cfparse('I should see {value_sbj_areas_keyword} as keyword in the first item of subject areas'))
+def is_the_keyword_in_the_subject_areas_panel(value_sbj_areas_keyword):
+    record = Arsenic().get_element_with_locator(HD.FIRST_SUBJECT_AREAS_KEYWORD).text
+    assert value_sbj_areas_keyword in record
+
+
+@then(parsers.cfparse('I should see {value_sbj_areas_author} as author in the first item of subject areas'))
+def is_the_keyword_in_the_subject_areas_panel(value_sbj_areas_author):
+    record = Arsenic().get_element_with_locator(HD.FIRST_SUBJECT_AREAS_AUTHOR).text
+    assert value_sbj_areas_author in record
 
 
 def _is_arxiv_error_message_present():

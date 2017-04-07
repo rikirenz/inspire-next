@@ -213,7 +213,6 @@ Feature: Literature Suggestions
     And I should see Mister White in the record detail
     And I should see Computing in the record detail
 
-
   Scenario: Accept thesis and verify the confirmation message
     Given I am logged in
     When I go to the literature suggestion page
@@ -229,7 +228,6 @@ Feature: Literature Suggestions
     And I click on the button link with text My Title For Test
     And I click on the accept button
     Then I should see the message of confirmation
-
 
   Scenario: Submit article and verify record detail in the list page
     Given I am logged in
@@ -285,3 +283,21 @@ Feature: Literature Suggestions
     And I click on the button link with text My Title For Test
     And I click on the accept button
     Then I should see the message of confirmation
+
+  Scenario: Add keyword to an article in the holdingpen
+    Given I am logged in
+    When I go to the literature suggestion page
+    And I insert <input> in the input box with id arxiv_id
+    And I click on the button with id importData
+    And I click on the button with id acceptData
+    And I click on the submit button
+    And I go to the holding panel list page
+    And I should see the record in the list page
+    And I click on the button link with text The Large N Limit of Superconformal Field Theories and Supergravity
+    And I insert acc in the autocomplete input box with id new_subject_area
+    And I click on the Add keyword button
+    Then I should see Accelerators as keyword in the first item of subject areas
+    And I should see curator as author in the first item of subject areas
+
+  Examples: Vertical
+    | input | hep-th/9711200 |
